@@ -14,7 +14,7 @@ class BasicObject:
     def get_anim_frames(self, time, starting_time):
         startingFrame = starting_time * self.scene.FRAME_RATE
         totalFrames = startingFrame + time * self.scene.FRAME_RATE;
-        return (int(round(startingFrame)), int(round(totalFrames)))
+        return (startingFrame, totalFrames)
     
     def get_prog(self,index, startingFrame, lastFrame):
         if(index >= startingFrame):
@@ -30,19 +30,19 @@ class Shape(BasicObject):
     def move_to(self, point, duration, starting_time="not_set"):
         if starting_time == "not_set":
             starting_time = self.lastAnimationTime
-        startingFrame, lastFrame = self.get_anim_frames(duration, starting_time);
-        for i in range(startingFrame, lastFrame+1):
+        startingFrame , lastFrame = self.get_anim_frames(duration, starting_time)
+        for i in range(int(startingFrame), int(lastFrame)):
+            prog = self.get_prog(i, startingFrame, lastFrame)
             self.insert_animation_into_frame(self.lerp_to, [point, startingFrame, lastFrame,i, BasicObject.animationIdCount], i ); 
         
         BasicObject.animationIdCount += 1;
-        self.lastAnimationTime = starting_time+duration;
+        lastAnimationTime = starting_time+duration;
         return self
     
     def lerp_to(self, final_point, first_frame, last_frame, current_frame_index, animation_id):
             starting_x = 0;
             starting_y = 0;
-        
-            print(f" last {last_frame} current : {current_frame_index}") 
+
             if animation_id in self.old_animation_positions:
                 starting_x, starting_y = self.old_animation_positions[animation_id];
             else:

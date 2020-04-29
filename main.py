@@ -32,6 +32,7 @@ class Scene:
         except:
             pass;
 
+        print("Rendering Frames");
         for i, frame in enumerate(self.frames):
             for action in frame:
                 action[0]( *action[1]) # this is calling that first action, with the arguamets giving in the other one
@@ -69,13 +70,14 @@ s = Scene();
 
 rect1 = s.add(Rectangle(0,0,100,100,Color(1,0,0)));
 
-rect2 = s.add(Rectangle(0,0,100,100,Color(0,0.5,0.1)));
+rect1.move_to(Point(1000,1000), duration=2)
+rect1.move_to(Point(0,0), duration=3)
 
-rect2.move_to(Point(0,900), duration=5, starting_time=0)
-rect2.move_to(Point(900,900), duration=5, starting_time=5)
-rect2.move_to(Point(900,0), duration=5, starting_time=10)
-rect2.move_to(Point(0,0), duration=5, starting_time=15)
-
+"""rect4 = s.add(Rectangle(0,0,100,100, Color(0,0.1,1)))
+for i in range(0,25):
+    rect4.move_to(Point(250,500), duration=0.5, starting_time=i)
+    rect4.move_to(Point(750,500), duration=0.5, starting_time=i+0.5)
+"""
 '''
 rect1.move_to(Point(100,250) , 5, 0)
 rect1.move_to(Point(700,250) , 5, 5)

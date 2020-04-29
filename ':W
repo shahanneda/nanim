@@ -26,18 +26,13 @@ class Scene:
             object.scene = self
         return object;
 
-
-
-    def change_object_coord(self, object, point):
-        object.setX(point.x);
-        object.setY(point.y);
-
     def run_animation(self):
         try:
             os.mkdir(os.path.join(os.path.dirname(__file__), TEMP_FRAMES_LOCATION_NAME));
         except:
             pass;
 
+        print("Rendering Frames");
         for i, frame in enumerate(self.frames):
             for action in frame:
                 action[0]( *action[1]) # this is calling that first action, with the arguamets giving in the other one
@@ -73,18 +68,35 @@ class Scene:
 
 s = Scene();
 
-rect = s.add(Rectangle(0,0,100,100,Color(1,0,0)));
+rect1 = s.add(Rectangle(0,0,100,100,Color(1,0,0)));
 
-rect2 = s.add(Rectangle(500,500,100,100,Color(0.734,0.5,0.1)));
+rect2 = s.add(Rectangle(0,0,100,100,Color(0,0.5,0.1)));
 
-rect2.move_to(Point(1000,1000, 5, 0)
-rect2.move_to(Point(0,1000, 5, 5)
-rect2.move_to(Point(0,0, 5, 10)
+rect2.move_to(Point(0,900), duration=5, starting_time=0)
+rect2.move_to(Point(900,900), duration=5, starting_time=5)
+rect2.move_to(Point(900,0), duration=5, starting_time=10)
+rect2.move_to(Point(0,0), duration=5, starting_time=15)
 
-rect1.move_to(Point(100,250, 5, 0)
-rect1.move_to(Point(700,250, 5, 5)
-rect1.move_to(Point(800,0, 5, 10)
+rect3 = s.add(Rectangle(0,0,100,100, Color(0,0.1,1)))
+rect3.move_to(Point(0,900), duration=2, starting_time=0)
+rect3.move_to(Point(900,900), duration=2, starting_time=2)
+rect3.move_to(Point(900,0), duration=2, starting_time=4)
+rect3.move_to(Point(0,0), duration=2, starting_time=6)
+rect3.move_to(Point(0,900), duration=2, starting_time=8)
+rect3.move_to(Point(900,900), duration=2, starting_time=10)
+rect3.move_to(Point(900,0), duration=2, starting_time=12)
+rect3.move_to(Point(0,0), duration=2, starting_time=14)
 
+rect1.move_to(Point(1000,1000), duration=10)
+rect4 = s.add(Rectangle(0,0,100,100, Color(0,0.1,1)))
+for i in range(0,25):
+    rect4.move_to(Point(250,500), duration=0.5, starting_time=i)
+    rect4.move_to(Point(750,500), duration=0.5, starting_time=i+0.5)
+'''
+rect1.move_to(Point(100,250) , 5, 0)
+rect1.move_to(Point(700,250) , 5, 5)
+rect1.move_to(Point(800,0), 5, 10)
+'''
 
 s.run_animation()
 
