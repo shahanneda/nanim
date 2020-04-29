@@ -5,6 +5,7 @@ from utility import *
 import os
 import subprocess;
 WIDTH, HEIGHT = 1000, 1000
+TEMP_FRAMES_LOCATION_NAME = "TEMP-Anim-Frames/"
 
 objectsToDraw = []
 #objectsToDraw.append(BasicObject([Point(0,0), Point(100,0), Point(100,100), Point(0,100)], Color(0,1,0)))
@@ -30,14 +31,16 @@ def drawFrame():
 
 def writeFrame(index):
     dirname = os.path.dirname(__file__)
-    filename = os.path.join(dirname, 'animFrames/frame' + str(index) + ".png")
+    filename = os.path.join(dirname, TEMP_FRAMES_LOCATION_NAME  + str(index) + ".png")
     surface.write_to_png(filename)
 
 
 drawFrame();
 writeFrame(1);
+
 for i in range(100):
     objectsToDraw[0].setX(objectsToDraw[0].x + 1)
+    objectsToDraw[0].color.r += 0.01;
     drawFrame()
     writeFrame(i)
 
@@ -46,5 +49,9 @@ for i in range(100):
 #ctx.fill()
 
 
-ffmpegCmd = "ffmpeg -r 60 -f image2 -s 1920x1080 -i ./animFrames/frame%d.png -vcodec libx264 -crf 25  -pix_fmt yuv420p test.mp4".split();
+ffmpegCmd = ("ffmpeg -r 30 -f image2 -s 1920x1080 -i ./" + TEMP_FRAMES_LOCATION_NAME +"%d.png -vcodec libx264 -crf 25 -pix_fmt yuv420p test.mp4 -y").split();
+
+print(ffmpegCmd);
 subprocess.call(ffmpegCmd);
+subprocess.call(("rm -rf ./" + TEMP_FRAMES_LOCATION_NAME+ "*").split()); 
+subprocess.call("open test.mp4".split());
