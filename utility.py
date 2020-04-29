@@ -17,5 +17,22 @@ class Color:
 class Rectangle(BasicObject):
 
     def __init__(self, x, y, width, height, color=Color(0,0,0)):
-        super().__init__( [Point(x,y), Point(x+width, y), Point(x+width, y+height), Point(x,y+height)] , color);
+        self.x = x;
+        self.y = y;
+        self.width = width;
+        self.height = height;
+
+        super().__init__( calcPoints(), color);
+
+    def calcPoints(self):
+        return [Point(self.x,self.y), Point(self.x+self.width, self.y), Point(self.x+self.width, self.y+self.height), Point(self.x,self.y+self.height)]
+
+    def setY(self, y):
+        self.y = y;
+        self.points = calcPoints();
+
+    def setX(self, x):
+        self.x = x;
+        self.points = calcPoints();
+
         

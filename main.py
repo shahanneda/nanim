@@ -9,9 +9,7 @@ WIDTH, HEIGHT = 1000, 1000
 objectsToDraw = []
 #objectsToDraw.append(BasicObject([Point(0,0), Point(100,0), Point(100,100), Point(0,100)], Color(0,1,0)))
 
-objectsToDraw.append(Rectangle(200,200,20,20,Color(1,0,0) ))
-objectsToDraw.append(Rectangle(200,100,20,20,Color(1,1,0) ))
-objectsToDraw.append(Rectangle(100,100,20,20,Color(0.2,1,0) ))
+objectsToDraw.append(Rectangle(200,200,20,20,Color(0,0.5,0.7) ))
 
 surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, WIDTH, HEIGHT)
 ctx = cairo.Context(surface)
@@ -37,7 +35,8 @@ def writeFrame(index):
 
 drawFrame();
 writeFrame(1);
-
+for i in range(100):
+    objectsToDraw[0].x
 #ctx.rectangle(0, 0, 50, 120)
 #ctx.set_source_rgb(1, 0, 0)
 #ctx.fill()
