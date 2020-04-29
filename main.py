@@ -58,7 +58,7 @@ class Scene:
             for point in object.points[1:]: # skip first point since we already moved there
                 self.ctx.line_to(point.x, point.y)
             self.ctx.close_path()
-            self.ctx.set_source_rgb(object.color.r, object.color.g, object.color.b)
+            self.ctx.set_source_rgba(object.color.r, object.color.g, object.color.b, object.color.a)
             self.ctx.fill()
 
     def writeFrame(self, index):
@@ -70,8 +70,15 @@ s = Scene();
 
 rect1 = s.add(Rectangle(0,0,100,100,Color(1,0,0)));
 
-rect1.move_to(Point(1000,1000), duration=2)
-rect1.move_to(Point(0,0), duration=3)
+rect1.fadeIn()\
+    .fadeOut()\
+    .move_to(Point(500,500), duration=2)\
+    .fadeIn()\
+    .fadeOut()\
+    .fadeIn()\
+    .move_to(Point(1000,1000), duration=2)\
+    .move_to(Point(0,0), duration=3)\
+    .fadeOut(duration=0.5)
 
 """rect4 = s.add(Rectangle(0,0,100,100, Color(0,0.1,1)))
 for i in range(0,25):

@@ -22,6 +22,32 @@ class BasicObject:
             #return 1
         return float((index-int(startingFrame))/(int(lastFrame)-int(startingFrame)))
 
+    def fadeOut(self, duration=0.5, starting_time="not_set", blocking=True):
+        if starting_time == "not_set":
+            starting_time = self.lastAnimationTime;
+        startingFrame, lastFrame = self.get_anim_frames(duration, starting_time);
+        for i in range(startingFrame, lastFrame+1):
+            alpha = 1-self.get_prog(i, startingFrame, lastFrame)
+            self.insert_animation_into_frame(self.set_color, [Color(self.color.r, self.color.g, self.color.b,alpha)], i ); 
+
+        if blocking:
+            self.lastAnimationTime = starting_time + duration;
+        return self
+    def fadeIn(self, duration=0.5, starting_time="not_set", blocking=True):
+        if starting_time == "not_set":
+            starting_time = self.lastAnimationTime;
+        startingFrame, lastFrame = self.get_anim_frames(duration, starting_time);
+        for i in range(startingFrame, lastFrame+1):
+            alpha = self.get_prog(i, startingFrame, lastFrame)
+            self.insert_animation_into_frame(self.set_color, [Color(self.color.r, self.color.g, self.color.b,alpha)], i ); 
+
+        if blocking:
+            self.lastAnimationTime = starting_time + duration;
+
+        return self
+
+    def set_color(self,color):
+        self.color = color;
 def lin_interpolate(x1, y1, x2, y2, x3):
     return y1 + (x3 - x1) * ((y2-y1)/(x2-x1))
 
@@ -67,10 +93,11 @@ class Point:
         self.y = y
 
 class Color:
-    def __init__(self, r, g, b):
+    def __init__(self, r, g, b, a=1):
         self.r = r
         self.g = g
         self.b = b
+        self.a = a
 
 class Rectangle(Shape):
 
