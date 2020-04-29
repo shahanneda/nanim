@@ -5,131 +5,89 @@ from utility import *
 import os
 import subprocess;
 
-WIDTH, HEIGHT = 1920, 1080
+WIDTH, HEIGHT = 1000, 1000
 FRAME_RATE = 10
 TEMP_FRAMES_LOCATION_NAME = "TEMP-Anim-Frames/"
 
-objectsToDraw = []
 #objectsToDraw.append(BasicObject([Point(0,0), Point(100,0), Point(100,100), Point(0,100)], Color(0,1,0)))
 
-objectsToDraw.append(Rectangle(200,200,20,20,Color(0,0.5,0.7) ))
 
-surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, WIDTH, HEIGHT)
-ctx = cairo.Context(surface)
-
-frames = [];
-
-"""
-frames 
-each frame has an array with actions that it needs to 
+class Scene:
+    def __init__(self, file_name="animation.mp4"):
+        self.objectsToDraw = []
+        self.surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, WIDTH, HEIGHT)
+        self.ctx = cairo.Context(self.surface)
+        self.frames = [];
 
 
-rectangele
-    move to 10
-    wait 5 seconds
-    move to 5
-
-square 
-    move to 1
-    wait 2 seconds
-    move to 10
-
-recmove to 10
-square move to 1
-wait 4
-
-rec move to 1
-wait 2
-square move to 10
+    def add(self, object):
+        if isinstance(object, BasicObject):
+            self.objectsToDraw.append(object);
+            object.scene = self
+        return object;
 
 
-squareMorphIntoRectangel();
+    def move_object_to(self, object, point, time, starting_time=0):
+        startingFrame = starting_time*FRAME_RATE
+        totalFrames = startingFrame + time * FRAME_RATE;
 
-rectangle
+        for i in range(int(startingFrame), int(totalFrames)):
+            prog = i/int(totalFrames);
+            if len(self.frames) > i:
+                self.frames[i].append( [ self.change_object_coord, [object, Point(point.x * prog, point.y * prog)]] ); 
+            else:
+                self.frames.append([ [ self.change_object_coord, [object, Point(point.x * prog, point.y * prog) ] ]  ] ); 
 
-wait 2 seconds
-"""
+    def change_object_coord(self, object, point):
+        object.setX(point.x);
+        object.setY(point.y);
 
-def move_object_to(object, point, time, startingTime=0):
-    startingFrame = startingTime*FRAME_RATE
-    totalFrames = startingFrame + time * FRAME_RATE;
-    print(startingFrame)
-    print(totalFrames)
+    def run_animation(self):
+        try:
+            os.mkdir(os.path.join(os.path.dirname(__file__), TEMP_FRAMES_LOCATION_NAME));
+        except:
+            pass;
 
-    for i in range(int(startingFrame), int(totalFrames)):
-        prog = i/int(totalFrames);
-        if len(frames) > i:
-            frames[i].append( [ change_object_coord, [object, Point(point.x * prog, point.y * prog)]] ); 
-        else:
-            frames.append([ [ change_object_coord, [object, Point(point.x * prog, point.y * prog) ] ]  ] ); 
+        for i, frame in enumerate(self.frames):
+            for action in frame:
+                action[0]( *action[1]) # this is calling that first action, with the arguamets giving in the other one
+            self.drawFrame()
+            self.writeFrame(i)
 
+        self.make_video_from_frames();
 
-    
+    def make_video_from_frames(self):
+        ffmpegCmd = (f"ffmpeg -r {FRAME_RATE} -f image2 -s 1920x1080 -i ./{TEMP_FRAMES_LOCATION_NAME}%d.png -vcodec libx264 -crf 25 -pix_fmt yuv420p test.mp4 -y").split();
+        subprocess.call(ffmpegCmd);
+        subprocess.call(("rm -rf ./" + TEMP_FRAMES_LOCATION_NAME).split()); 
+        subprocess.call("open test.mp4".split());
 
-def change_object_coord(object, point):
-   object.setX(point.x);
-   object.setY(point.y);
-    
+    def drawFrame(self):
+        self.ctx.rectangle(0, 0, WIDTH, HEIGHT)
+        self.ctx.set_source_rgb(0.8, 0.8, 1)
+        self.ctx.fill()
 
-    
+        for object in self.objectsToDraw:
+            self.ctx.move_to(object.points[0].x, object.points[0].y)
 
-def run_animation():
-    try:
-        os.mkdir(os.path.join(os.path.dirname(__file__), TEMP_FRAMES_LOCATION_NAME));
-    except:
-        pass;
+            for point in object.points[1:]: # skip first point since we already moved there
+                self.ctx.line_to(point.x, point.y)
+            self.ctx.close_path()
+            self.ctx.set_source_rgb(object.color.r, object.color.g, object.color.b)
+            self.ctx.fill()
 
-    for i, frame in enumerate(frames):
-        for action in frame:
-            action[0]( *action[1]) # this is calling that first action, with the arguamets giving in the other one
-        drawFrame()
-        writeFrame(i)
-    
+    def writeFrame(self, index):
+        dirname = os.path.dirname(__file__)
+        filename = os.path.join(dirname, TEMP_FRAMES_LOCATION_NAME  + str(index) + ".png")
+        self.surface.write_to_png(filename)
 
+s = Scene();
 
-def drawFrame():
-    ctx.rectangle(0, 0, WIDTH, HEIGHT)
-    ctx.set_source_rgb(0.8, 0.8, 1)
-    ctx.fill()
-
-    for object in objectsToDraw:
-        ctx.move_to(object.points[0].x, object.points[0].y)
-
-        for point in object.points[1:]: # skip first point since we already moved there
-            ctx.line_to(point.x, point.y)
-        ctx.close_path()
-        ctx.set_source_rgb(object.color.r, object.color.g, object.color.b)
-        ctx.fill()
-
-def writeFrame(index):
-    dirname = os.path.dirname(__file__)
-    filename = os.path.join(dirname, TEMP_FRAMES_LOCATION_NAME  + str(index) + ".png")
-    surface.write_to_png(filename)
+rectangle1 = Rectangle(0,0,100,100,Color(1,0,0))
+s.add(rectangle1)
+s.move_object_to(rectangle1, Point(500,100), 5.0)
 
 
-"""
-for i in range(100):
-    objectsToDraw[0].setX(objectsToDraw[0].x + 1)
-    objectsToDraw[0].color.r += 0.01;
-    drawFrame()
-    writeFrame(i)
-"""
-objectsToDraw.append(Rectangle(500,200,100,100,Color(1,0.5,0.7) ))
-objectsToDraw.append(Rectangle(50,70,20,20,Color(0,0.5,0.7) ))
-
-move_object_to(objectsToDraw[1], Point(500,110), 5.0 )
-move_object_to(objectsToDraw[2], Point(900,130), 10.0, startingTime=5 )
-move_object_to(objectsToDraw[0], Point(100,100), 7.0 )
-
-run_animation()
-#ctx.rectangle(0, 0, 50, 120)
-#ctx.set_source_rgb(1, 0, 0)
-#ctx.fill()
+s.run_animation()
 
 
-ffmpegCmd = (f"ffmpeg -r {FRAME_RATE} -f image2 -s 1920x1080 -i ./{TEMP_FRAMES_LOCATION_NAME}%d.png -vcodec libx264 -crf 25 -pix_fmt yuv420p test.mp4 -y").split();
-
-print(ffmpegCmd);
-subprocess.call(ffmpegCmd);
-subprocess.call(("rm -rf ./" + TEMP_FRAMES_LOCATION_NAME).split()); 
-subprocess.call("open test.mp4".split());

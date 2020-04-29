@@ -2,7 +2,7 @@ class BasicObject:
     def __init__(self, points, color):
         self.points = points
         self.color = color
-
+    
 class Point:
     def __init__(self, x, y):
         self.x = x
