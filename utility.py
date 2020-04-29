@@ -22,17 +22,17 @@ class Rectangle(BasicObject):
         self.width = width;
         self.height = height;
 
-        super().__init__( calcPoints(), color);
+        super().__init__( self.calcPoints(), color);
 
     def calcPoints(self):
         return [Point(self.x,self.y), Point(self.x+self.width, self.y), Point(self.x+self.width, self.y+self.height), Point(self.x,self.y+self.height)]
 
     def setY(self, y):
         self.y = y;
-        self.points = calcPoints();
+        self.points = self.calcPoints();
 
     def setX(self, x):
         self.x = x;
-        self.points = calcPoints();
+        self.points = self.calcPoints();
 
         
