@@ -3,7 +3,7 @@ import cairo
 import utility
 from utility import *
 import os
-
+import subprocess;
 WIDTH, HEIGHT = 1000, 1000
 
 objectsToDraw = []
@@ -46,4 +46,5 @@ for i in range(100):
 #ctx.fill()
 
 
-
+ffmpegCmd = "ffmpeg -r 60 -f image2 -s 1920x1080 -i ./animFrames/frame%d.png -vcodec libx264 -crf 25  -pix_fmt yuv420p test.mp4".split();
+subprocess.call(ffmpegCmd);
