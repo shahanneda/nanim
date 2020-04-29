@@ -85,13 +85,19 @@ rect1.fadeIn()\
 rect2 = s.add(Rectangle(x=200, y=200,  width=100, height=100, color=Color(0.6,0.6,0.6)));
 rect2.fadeIn().move_to(Point(200,900), duration=2).fadeIn().fadeOut();
 
-rect5 = s.add(Rectangle(500,500,20,50, Color(0,0,0)))
+rect5 = s.add(Rectangle(500,500,20,50, Color(1,0,0)))
 
 rect5.fadeIn(duration=2)\
      .fadeOut()\
      .fadeIn()\
      .move_to(Point(900,200), duration=1)\
      .fadeOut()\
+     .move_to(Point(500,500))\
+     .fadeIn()\
+     .wait(2)\
+     .move_to(Point(800, 800))\
+
+
 
 """rect4 = s.add(Rectangle(0,0,100,100, Color(0,0.1,1)))
 for i in range(0,25):

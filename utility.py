@@ -43,8 +43,10 @@ class BasicObject:
 
         if blocking:
             self.lastAnimationTime = starting_time + duration;
-
         return self
+
+    def wait(self, duration=0.5):
+        self.lastAnimationTime = self.lastAnimationTime + duration;
 
     def set_color(self,color):
         self.color = color;
