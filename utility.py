@@ -3,16 +3,26 @@ class BasicObject:
         self.points = points
         self.color = color
 
+
+    def insert_animation_into_frame(self, function, parameters, i):
+        while len(self.scene.frames) <= i:
+            self.scene.frames.append([])
+        self.scene.frames[i].append([function, parameters]); 
+
+    
+class Shape(BasicObject):
     def move_to(self, point, time, starting_time=0):
         startingFrame = starting_time * self.scene.FRAME_RATE
         totalFrames = startingFrame + time * self.scene.FRAME_RATE;
-
+    
         for i in range(int(startingFrame), int(totalFrames)):
-            prog = i/int(totalFrames);
-            if len(self.scene.frames) > i:
-                self.scene.frames[i].append( [ self.scene.change_object_coord, [self, Point(point.x * prog, point.y * prog)]] ); 
-            else:
-                self.scene.frames.append([ [ self.scene.change_object_coord, [self, Point(point.x * prog, point.y * prog) ] ]  ]); 
+            prog = (i-startingFrame)/(int(totalFrames)-int(startingFrame));
+            self.insert_animation_into_frame(self.change_coord, [Point(point.x * prog, point.y * prog)], i ); 
+    
+    def change_coord(self, point):
+        self.setX(point.x);
+        self.setY(point.y);
+
 class Point:
     def __init__(self, x, y):
         self.x = x
@@ -24,7 +34,7 @@ class Color:
         self.g = g
         self.b = b
 
-class Rectangle(BasicObject):
+class Rectangle(Shape):
 
     def __init__(self, x, y, width, height, color=Color(0,0,0)):
         self.x = x;

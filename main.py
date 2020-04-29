@@ -40,6 +40,7 @@ class Scene:
 
         for i, frame in enumerate(self.frames):
             for action in frame:
+                print(action[1]);
                 action[0]( *action[1]) # this is calling that first action, with the arguamets giving in the other one
             self.drawFrame()
             self.writeFrame(i)
@@ -75,7 +76,7 @@ s = Scene();
 
 rect = Rectangle(0,0,100,100,Color(1,0,0))
 s.add(rect)
-rect.move_to(point=Point(100,100), time=10, starting_time=2)
+rect.move_to(point=Point(100,100), time=10, starting_time=5)
 
 s.run_animation()
 
