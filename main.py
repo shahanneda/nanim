@@ -6,6 +6,7 @@ import os
 import subprocess;
 
 WIDTH, HEIGHT = 1920, 1080
+FRAME_RATE = 30
 TEMP_FRAMES_LOCATION_NAME = "TEMP-Anim-Frames/"
 
 objectsToDraw = []
@@ -17,7 +18,7 @@ surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, WIDTH, HEIGHT)
 ctx = cairo.Context(surface)
 
 frames = [];
-currentFrameIndex = 0;
+
 """
 frames 
 each frame has an array with actions that it needs to 
@@ -50,8 +51,9 @@ wait 2 seconds
 """
 
 def move_object_to(object, point, time):
-    for i in range(1,time):
-        prog = i/time;
+    totalFrames = time * FRAME_RATE;
+    for i in range(1, int(totalFrames)):
+        prog = i/int(totalFrames);
         frames.append( [ [ change_object_coord, [object, Point(point.x * prog, point.y * prog) ] ]  ] ); 
     
 
@@ -63,6 +65,7 @@ def change_object_coord(object, point):
     
 
 def run_animation():
+    os.mkdir(os.path.join(os.path.dirname(__file__), TEMP_FRAMES_LOCATION_NAME));
     for i, frame in enumerate(frames):
         for action in frame:
             action[0]( *action[1]) # this is calling that first action, with the arguamets giving in the other one
@@ -98,7 +101,7 @@ for i in range(100):
     drawFrame()
     writeFrame(i)
 """
-move_object_to(objectsToDraw[0], Point(100,100), 100 )
+move_object_to(objectsToDraw[0], Point(100,100), 1.0 )
 run_animation()
 #ctx.rectangle(0, 0, 50, 120)
 #ctx.set_source_rgb(1, 0, 0)
@@ -109,5 +112,5 @@ ffmpegCmd = ("ffmpeg -r 30 -f image2 -s 1920x1080 -i ./" + TEMP_FRAMES_LOCATION_
 
 print(ffmpegCmd);
 subprocess.call(ffmpegCmd);
-subprocess.call(("rm -rf ./" + TEMP_FRAMES_LOCATION_NAME+ "*.png").split()); 
+subprocess.call(("rm -rf ./" + TEMP_FRAMES_LOCATION_NAME).split()); 
 subprocess.call("open test.mp4".split());
