@@ -6,7 +6,7 @@ import os
 import subprocess;
 
 WIDTH, HEIGHT = 1920, 1080
-FRAME_RATE = 30
+FRAME_RATE = 10
 TEMP_FRAMES_LOCATION_NAME = "TEMP-Anim-Frames/"
 
 objectsToDraw = []
@@ -50,11 +50,20 @@ rectangle
 wait 2 seconds
 """
 
-def move_object_to(object, point, time):
-    totalFrames = time * FRAME_RATE;
-    for i in range(1, int(totalFrames)):
+def move_object_to(object, point, time, startingTime=0):
+    startingFrame = startingTime*FRAME_RATE
+    totalFrames = startingFrame + time * FRAME_RATE;
+    print(startingFrame)
+    print(totalFrames)
+
+    for i in range(int(startingFrame), int(totalFrames)):
         prog = i/int(totalFrames);
-        frames.append( [ [ change_object_coord, [object, Point(point.x * prog, point.y * prog) ] ]  ] ); 
+        if len(frames) > i:
+            frames[i].append( [ change_object_coord, [object, Point(point.x * prog, point.y * prog)]] ); 
+        else:
+            frames.append([ [ change_object_coord, [object, Point(point.x * prog, point.y * prog) ] ]  ] ); 
+
+
     
 
 def change_object_coord(object, point):
@@ -65,7 +74,11 @@ def change_object_coord(object, point):
     
 
 def run_animation():
-    os.mkdir(os.path.join(os.path.dirname(__file__), TEMP_FRAMES_LOCATION_NAME));
+    try:
+        os.mkdir(os.path.join(os.path.dirname(__file__), TEMP_FRAMES_LOCATION_NAME));
+    except:
+        pass;
+
     for i, frame in enumerate(frames):
         for action in frame:
             action[0]( *action[1]) # this is calling that first action, with the arguamets giving in the other one
@@ -101,14 +114,20 @@ for i in range(100):
     drawFrame()
     writeFrame(i)
 """
-move_object_to(objectsToDraw[0], Point(100,100), 1.0 )
+objectsToDraw.append(Rectangle(500,200,100,100,Color(1,0.5,0.7) ))
+objectsToDraw.append(Rectangle(50,70,20,20,Color(0,0.5,0.7) ))
+
+move_object_to(objectsToDraw[1], Point(500,110), 5.0 )
+move_object_to(objectsToDraw[2], Point(900,130), 10.0, startingTime=5 )
+move_object_to(objectsToDraw[0], Point(100,100), 7.0 )
+
 run_animation()
 #ctx.rectangle(0, 0, 50, 120)
 #ctx.set_source_rgb(1, 0, 0)
 #ctx.fill()
 
 
-ffmpegCmd = ("ffmpeg -r 30 -f image2 -s 1920x1080 -i ./" + TEMP_FRAMES_LOCATION_NAME +"%d.png -vcodec libx264 -crf 25 -pix_fmt yuv420p test.mp4 -y").split();
+ffmpegCmd = (f"ffmpeg -r {FRAME_RATE} -f image2 -s 1920x1080 -i ./{TEMP_FRAMES_LOCATION_NAME}%d.png -vcodec libx264 -crf 25 -pix_fmt yuv420p test.mp4 -y").split();
 
 print(ffmpegCmd);
 subprocess.call(ffmpegCmd);
