@@ -6,13 +6,13 @@ import os
 import subprocess;
 
 WIDTH, HEIGHT = 1000, 1000
-FRAME_RATE = 10
 TEMP_FRAMES_LOCATION_NAME = "TEMP-Anim-Frames/"
 
 #objectsToDraw.append(BasicObject([Point(0,0), Point(100,0), Point(100,100), Point(0,100)], Color(0,1,0)))
 
 
 class Scene:
+    FRAME_RATE = 10;
     def __init__(self, file_name="animation.mp4"):
         self.objectsToDraw = []
         self.surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, WIDTH, HEIGHT)
@@ -27,16 +27,6 @@ class Scene:
         return object;
 
 
-    def move_object_to(self, object, point, time, starting_time=0):
-        startingFrame = starting_time*FRAME_RATE
-        totalFrames = startingFrame + time * FRAME_RATE;
-
-        for i in range(int(startingFrame), int(totalFrames)):
-            prog = i/int(totalFrames);
-            if len(self.frames) > i:
-                self.frames[i].append( [ self.change_object_coord, [object, Point(point.x * prog, point.y * prog)]] ); 
-            else:
-                self.frames.append([ [ self.change_object_coord, [object, Point(point.x * prog, point.y * prog) ] ]  ] ); 
 
     def change_object_coord(self, object, point):
         object.setX(point.x);
@@ -57,7 +47,7 @@ class Scene:
         self.make_video_from_frames();
 
     def make_video_from_frames(self):
-        ffmpegCmd = (f"ffmpeg -r {FRAME_RATE} -f image2 -s 1920x1080 -i ./{TEMP_FRAMES_LOCATION_NAME}%d.png -vcodec libx264 -crf 25 -pix_fmt yuv420p test.mp4 -y").split();
+        ffmpegCmd = (f"ffmpeg -r {Scene.FRAME_RATE} -f image2 -s 1920x1080 -i ./{TEMP_FRAMES_LOCATION_NAME}%d.png -vcodec libx264 -crf 25 -pix_fmt yuv420p test.mp4 -y").split();
         subprocess.call(ffmpegCmd);
         subprocess.call(("rm -rf ./" + TEMP_FRAMES_LOCATION_NAME).split()); 
         subprocess.call("open test.mp4".split());
@@ -83,10 +73,9 @@ class Scene:
 
 s = Scene();
 
-rectangle1 = Rectangle(0,0,100,100,Color(1,0,0))
-s.add(rectangle1)
-s.move_object_to(rectangle1, Point(500,100), 5.0)
-
+rect = Rectangle(0,0,100,100,Color(1,0,0))
+s.add(rect)
+rect.move_to(point=Point(100,100), time=10, starting_time=2)
 
 s.run_animation()
 

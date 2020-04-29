@@ -2,7 +2,17 @@ class BasicObject:
     def __init__(self, points, color):
         self.points = points
         self.color = color
-    
+
+    def move_to(self, point, time, starting_time=0):
+        startingFrame = starting_time * self.scene.FRAME_RATE
+        totalFrames = startingFrame + time * self.scene.FRAME_RATE;
+
+        for i in range(int(startingFrame), int(totalFrames)):
+            prog = i/int(totalFrames);
+            if len(self.scene.frames) > i:
+                self.scene.frames[i].append( [ self.scene.change_object_coord, [self, Point(point.x * prog, point.y * prog)]] ); 
+            else:
+                self.scene.frames.append([ [ self.scene.change_object_coord, [self, Point(point.x * prog, point.y * prog) ] ]  ]); 
 class Point:
     def __init__(self, x, y):
         self.x = x
