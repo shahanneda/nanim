@@ -69,27 +69,6 @@ class Scene:
         filename = os.path.join(dirname, TEMP_FRAMES_LOCATION_NAME  + str(index) + ".png")
         self.surface.write_to_png(filename)
 
-s = Scene();
-
-
-rect = s.add(Rectangle(500,500,100,100, Color.RGB(0,100,90)));
-rect.fadeIn();
-rect.rotate(math.pi*2, duration=5);
-rect.rotate(math.pi*2, duration=5);
-
-rect1 = s.add(Rectangle(0,0,100,100,Color.RGB(0,70,120)));
-
-rect1.fadeIn()\
-    .fadeOut()\
-    .fadeIn()\
-    .move_to(Point(500,500), duration=2)\
-    .fadeOut()\
-    .fadeIn()\
-    .fadeOut()\
-    .fadeIn()\
-    .move_to(Point(1000,1000), duration=2)\
-    .move_to(Point(0,0), duration=3)\
-    .fadeOut(duration=0.5)\
 
 """
 rect2 = s.add(Rectangle(x=200, y=200,  width=100, height=100, color=Color.RGB(0.6,0.6,0.6)));
@@ -123,6 +102,5 @@ rect1.move_to(Point(700,250) , 5, 5)
 rect1.move_to(Point(800,0), 5, 10)
 '''
 
-s.run_animation()
 
 

@@ -6,11 +6,16 @@ class BasicObject:
         self.color = color
         self.old_animation_positions = {}
         self.lastAnimationTime = 0;
+        self.recalculate_position_from_points()
+        
 
     def insert_animation_into_frame(self, function, parameters, i):
         while len(self.scene.frames) <= i:
             self.scene.frames.append([])
         self.scene.frames[i].append([function, parameters]); 
+
+    def get_position(self):
+        return Point(self.x, self.y);
 
     def get_anim_frames(self, time, starting_time):
         startingFrame = starting_time * self.scene.FRAME_RATE
@@ -47,8 +52,8 @@ class BasicObject:
         return self
 
     def rotate(self, angle, duration=0.5, starting_time="not_set", blocking=True, around="not_set"):
-        if around == "not_set":
-            around = Point(self.x, self.y);
+        self.recalculate_position_from_points()
+        #print(f"around: {around.x} {around.y}, self: {self.x} {self.y}");
 
         if starting_time == "not_set":
             starting_time = self.lastAnimationTime;
@@ -57,6 +62,7 @@ class BasicObject:
             subAngle = self.get_prog(i,starting_frame,last_frame) * angle;
             self.insert_animation_into_frame( self.rotate_object_by_angle, [subAngle, around], i);
 
+        self.insert_animation_into_frame( self.recalculate_position_from_points, [], last_frame);
         if blocking:
             self.lastAnimationTime = starting_time + duration;
         return self;
@@ -68,13 +74,31 @@ class BasicObject:
     def set_color(self,color):
         self.color = color;
     
-    def rotate_object_by_angle(self, angle, around):
+    def recalculate_position_from_points(self):
+        newx = 0
+        newy = 0
+        counter = 0
+        for point in self.points:
+           newx += point.x
+           newy += point.y
+           counter+= 1
+
+        self.x = newx/counter
+        self.y = newy/counter
+
+
+    def rotate_object_by_angle(self, angle, around="not_set"):
+        if around == "not_set":
+            around = Point(self.x, self.y);
         for i, point in enumerate(self.points):
            self.points[i] =  BasicObject.rotate_point_by_angle(point, angle, around);
 
     def rotate_point_by_angle(point, angle, around):
         point = Point(point.x - around.x, point.y - around.y) # change the orgin so we rotate around ourselves instead of the real origin
-        return Point( around.x + (point.x*math.cos(angle)- point.y*math.sin(angle)), around.y + (point.y*math.cos(angle) + point.x*math.sin(angle)));
+        newx =  around.x + (point.x*math.cos(angle)- point.y*math.sin(angle));
+        newy =  around.y + (point.y*math.cos(angle) + point.x*math.sin(angle));
+        print(f"new x: {newx} y: {newy} angle: {angle} cos: {math.cos(angle)} px {point.x} py {point.y}");
+        return Point(newx, newy);
 
 
 def lin_interpolate(x1, y1, x2, y2, x3):
