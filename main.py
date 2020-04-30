@@ -12,11 +12,14 @@ TEMP_FRAMES_LOCATION_NAME = "TEMP-Anim-Frames/"
 
 
 class Scene:
-    FRAME_RATE = 30;
+    FRAME_RATE = 10;
     def __init__(self, file_name="animation.mp4"):
         self.objectsToDraw = []
         self.surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, WIDTH, HEIGHT)
         self.ctx = cairo.Context(self.surface)
+        #self.ctx.rotate(3*math.pi/2);
+        #self.ctx.translate(WIDTH, -HEIGHT)
+        
         self.frames = [];
 
 
@@ -68,7 +71,13 @@ class Scene:
 
 s = Scene();
 
-rect1 = s.add(Rectangle(0,0,100,100,Color(1,0,0)));
+
+rect = s.add(Rectangle(500,500,100,100, Color.RGB(0,100,90)));
+rect.fadeIn();
+rect.rotate(math.pi*2, duration=5);
+rect.rotate(math.pi*2, duration=5);
+
+rect1 = s.add(Rectangle(0,0,100,100,Color.RGB(0,70,120)));
 
 rect1.fadeIn()\
     .fadeOut()\
@@ -80,12 +89,13 @@ rect1.fadeIn()\
     .fadeIn()\
     .move_to(Point(1000,1000), duration=2)\
     .move_to(Point(0,0), duration=3)\
-    .fadeOut(duration=0.5)
+    .fadeOut(duration=0.5)\
 
-rect2 = s.add(Rectangle(x=200, y=200,  width=100, height=100, color=Color(0.6,0.6,0.6)));
+"""
+rect2 = s.add(Rectangle(x=200, y=200,  width=100, height=100, color=Color.RGB(0.6,0.6,0.6)));
 rect2.fadeIn().move_to(Point(200,900), duration=2).fadeIn().fadeOut();
 
-rect5 = s.add(Rectangle(500,500,20,50, Color(1,0,0)))
+rect5 = s.add(Rectangle(500,500,20,50, Color.RGB(173,0,123)))
 
 rect5.fadeIn(duration=2)\
      .fadeOut()\
@@ -96,10 +106,13 @@ rect5.fadeIn(duration=2)\
      .fadeIn()\
      .wait(2)\
      .move_to(Point(800, 800))\
+     .wait(5)\
+     .move_to(Point(200,200))\
 
 
 
-"""rect4 = s.add(Rectangle(0,0,100,100, Color(0,0.1,1)))
+
+rect4 = s.add(Rectangle(0,0,100,100, Color(0,0.1,1)))
 for i in range(0,25):
     rect4.move_to(Point(250,500), duration=0.5, starting_time=i)
     rect4.move_to(Point(750,500), duration=0.5, starting_time=i+0.5)
@@ -111,11 +124,5 @@ rect1.move_to(Point(800,0), 5, 10)
 '''
 
 s.run_animation()
-
-
-def myfunc(input1, input2, input3):
-    print("TITLE");
-
-myfunc(input1,  input2, input3); 
 
 

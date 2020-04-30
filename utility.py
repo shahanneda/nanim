@@ -1,3 +1,4 @@
+import math;
 class BasicObject:
     animationIdCount = 0
     def __init__(self, points, color):
@@ -45,17 +46,43 @@ class BasicObject:
             self.lastAnimationTime = starting_time + duration;
         return self
 
+    def rotate(self, angle, duration=0.5, starting_time="not_set", blocking=True, around="not_set"):
+        if around == "not_set":
+            around = Point(self.x, self.y);
+
+        if starting_time == "not_set":
+            starting_time = self.lastAnimationTime;
+        starting_frame, last_frame = self.get_anim_frames(duration, starting_time);
+        for i in range(starting_frame, last_frame+1):
+            subAngle = self.get_prog(i,starting_frame,last_frame) * angle;
+            self.insert_animation_into_frame( self.rotate_object_by_angle, [subAngle, around], i);
+
+        if blocking:
+            self.lastAnimationTime = starting_time + duration;
+        return self;
+            
     def wait(self, duration=0.5):
         self.lastAnimationTime = self.lastAnimationTime + duration;
+        return self
 
     def set_color(self,color):
         self.color = color;
+    
+    def rotate_object_by_angle(self, angle, around):
+        for i, point in enumerate(self.points):
+           self.points[i] =  BasicObject.rotate_point_by_angle(point, angle, around);
+
+    def rotate_point_by_angle(point, angle, around):
+        point = Point(point.x - around.x, point.y - around.y) # change the orgin so we rotate around ourselves instead of the real origin
+        return Point( around.x + (point.x*math.cos(angle)- point.y*math.sin(angle)), around.y + (point.y*math.cos(angle) + point.x*math.sin(angle)));
+
+
 def lin_interpolate(x1, y1, x2, y2, x3):
     return y1 + (x3 - x1) * ((y2-y1)/(x2-x1))
 
 class Shape(BasicObject):
 
-    def move_to(self, point, duration, starting_time="not_set"):
+    def move_to(self, point, duration=0.5, starting_time="not_set"):
         if starting_time == "not_set":
             starting_time = self.lastAnimationTime
         startingFrame, lastFrame = self.get_anim_frames(duration, starting_time);
@@ -94,7 +121,10 @@ class Point:
         self.x = x
         self.y = y
 
+
 class Color:
+    def RGB(r,g,b,a=255):
+        return Color(r/255, g/255,b/255, a/255);
     def __init__(self, r, g, b, a=1):
         self.r = r
         self.g = g
