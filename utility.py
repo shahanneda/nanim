@@ -7,6 +7,7 @@ class BasicObject:
         self.old_animation_positions = {}
         self.lastAnimationTime = 0;
         self.recalculate_position_from_points()
+        self.runningPosition = {}
         
 
     def insert_animation_into_frame(self, function, parameters, i):
@@ -15,7 +16,7 @@ class BasicObject:
         self.scene.frames[i].append([function, parameters]); 
 
     def get_position(self):
-        return Point(self.x, self.y);
+        return Point(self.runningPosition["x"], self.runningPosition["y"]);
 
     def get_anim_frames(self, time, starting_time):
         startingFrame = starting_time * self.scene.FRAME_RATE
@@ -110,11 +111,15 @@ def lin_interpolate(x1, y1, x2, y2, x3):
 
 class Shape(BasicObject):
     
-    def translate(self, x, y, duration=0.5, starting_time="not_set"):
-        self.move_to(Point(self.x + x, self.y + y), duration=duration, starting_time=starting_time);
+    def translate(self, x=0, y=0, duration=0.5, starting_time="not_set"):
+        self.move_to(Point(self.runningPosition["x"] + x, self.runningPosition["y"] + y), duration=duration, starting_time=starting_time);
         return self
 
     def move_to(self, point, duration=0.5, starting_time="not_set"):
+        self.runningPosition["x"] = point.x;
+        self.runningPosition["y"] = point.y;
+
+        print(f"moving to point {point.x} {point.y}")
         if starting_time == "not_set":
             starting_time = self.lastAnimationTime
         startingFrame, lastFrame = self.get_anim_frames(duration, starting_time);
@@ -170,8 +175,10 @@ class Rectangle(Shape):
         self.y = y;
         self.width = width;
         self.height = height;
-
         super().__init__( self.calcPoints(), color);
+
+        self.runningPosition["x"] = x;
+        self.runningPosition["y"] = y;
 
     def calcPoints(self):
         width = self.width
