@@ -51,7 +51,10 @@ class BasicObject:
             self.lastAnimationTime = starting_time + duration;
         return self
 
-    def rotate(self, angle, duration=0.5, starting_time="not_set", blocking=True, around="not_set"):
+    def rotate(self, angle, duration=0.5, starting_time="not_set", blocking=True, around="not_set", pi_mode=False):
+        if not pi_mode:
+            angle = (angle /180)*math.pi;
+        print(angle);
         self.recalculate_position_from_points()
         #print(f"around: {around.x} {around.y}, self: {self.x} {self.y}");
 
@@ -98,7 +101,7 @@ class BasicObject:
         point = Point(point.x - around.x, point.y - around.y) # change the orgin so we rotate around ourselves instead of the real origin
         newx =  around.x + (point.x*math.cos(angle)- point.y*math.sin(angle));
         newy =  around.y + (point.y*math.cos(angle) + point.x*math.sin(angle));
-        print(f"new x: {newx} y: {newy} angle: {angle} cos: {math.cos(angle)} px {point.x} py {point.y}");
+        #print(f"new x: {newx} y: {newy} angle: {angle} cos: {math.cos(angle)} px {point.x} py {point.y}");
         return Point(newx, newy);
 
 
@@ -106,6 +109,10 @@ def lin_interpolate(x1, y1, x2, y2, x3):
     return y1 + (x3 - x1) * ((y2-y1)/(x2-x1))
 
 class Shape(BasicObject):
+    
+    def translate(self, x, y, duration=0.5, starting_time="not_set"):
+        self.move_to(Point(self.x + x, self.y + y), duration=duration, starting_time=starting_time);
+        return self
 
     def move_to(self, point, duration=0.5, starting_time="not_set"):
         if starting_time == "not_set":
@@ -122,7 +129,7 @@ class Shape(BasicObject):
             starting_x = 0;
             starting_y = 0;
         
-            print(f" last {last_frame} current : {current_frame_index}") 
+            #print(f" last {last_frame} current : {current_frame_index}") 
             if animation_id in self.old_animation_positions:
                 starting_x, starting_y = self.old_animation_positions[animation_id];
             else:
@@ -167,7 +174,10 @@ class Rectangle(Shape):
         super().__init__( self.calcPoints(), color);
 
     def calcPoints(self):
-        return [Point(self.x,self.y), Point(self.x+self.width, self.y), Point(self.x+self.width, self.y+self.height), Point(self.x,self.y+self.height)]
+        width = self.width
+        height = self.height
+
+        return [Point(self.x-width/2,self.y-height/2), Point(self.x+width/2, self.y-height/2), Point(self.x+self.width/2, self.y+self.height/2), Point(self.x-width/2,self.y+self.height/2)]
 
     def setY(self, y):
         self.y = y;

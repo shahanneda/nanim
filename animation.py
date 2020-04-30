@@ -1,37 +1,30 @@
 from nanim import *; 
 
-s = Scene();
+s = Scene(frame_rate=10, quality=20);
 
-rect2 = s.add(Rectangle(500,500,250,250, Color.RGB(10,200,100)))\
-    .wait(2)\
-    .rotate(math.pi*2, duration=10)
 
-"""
+
+
 rect = s.add(Rectangle(500,500,100,100, Color.RGB(256,100,90)));
-rect.fadeIn();
-rect.rotate(math.pi*2, duration=10);
-rect.rotate(math.pi*2, duration=10)\
-    .wait(5)\
-    .rotate(math.pi/2, duration=5)\
-    .rotate(-math.pi/2, duration=5)\
+rect.rotate(360*10, duration=14, pi_mode=False);
     
 
-rect1 = s.add(Rectangle(0,0,100,100,Color.RGB(0,70,120)));
-rect1.fadeIn()\
-    .fadeOut()\
-    .fadeIn()\
-    .move_to(Point(500,500), duration=2)\
-    .fadeOut()\
-    .fadeIn()\
-    .fadeOut()\
-    .fadeIn()\
-    .move_to(Point(1000,1000), duration=2)\
-    .move_to(Point(0,0), duration=3)\
-    .fadeOut(duration=0.5)\
-    .fadeIn()\
-    .move_to(Point(100,500))\
-    .rotate(angle=math.pi, duration=7, around=rect.get_position())\
-    .rotate(angle=-math.pi, duration=5)\
-    .rotate(angle=math.pi, duration=7, around=rect.get_position())\
-"""
+s.add(Rectangle(500, 600, 200, 200, Color.RGB(0,150, 250)))\
+    .fadeIn(duration=2)\
+    .rotate(360*10, duration=7, around=Point(500,500))\
+    .rotate(-360*10, duration=7, around=Point(500,500))\
+    .fadeOut(duration=2)\
+
+s.add(Rectangle(500, 800, 200, 200, Color.RGB(105,150,0 )))\
+    .fadeIn(duration=2)\
+    .rotate(360*10, duration=7, around=Point(500,500))\
+    .rotate(-360.10, duration=7, around=Point(500,501))\
+    .fadeOut(duration=2)\
+
+s.add(Rectangle(400, 100, 200, 200, Color.RGB(150,0, 250)))\
+    .fadeIn(duration=2)\
+    .rotate(360*10, duration=7, around=Point(500,500))\
+    .rotate(-360*10, duration=7, around=Point(500,500))\
+    .fadeOut(duration=2)\
+
 s.run_animation();

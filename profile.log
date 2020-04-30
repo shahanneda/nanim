@@ -1,0 +1,309 @@
+FUNCTION  coc#client#get_channel()
+    Defined: ~/.vim/plugged/coc.nvim/autoload/coc/client.vim line 98
+Called 2 times
+Total time:   0.000011
+ Self time:   0.000011
+
+count  total (s)   self (s)
+    2              0.000003   if s:is_vim
+    2              0.000005     return a:client['channel']
+                              endif
+                              return a:client['chan_id']
+
+FUNCTION  coc#util#cursor()
+    Defined: ~/.vim/plugged/coc.nvim/autoload/coc/util.vim line 90
+Called 1 time
+Total time:   0.000029
+ Self time:   0.000029
+
+count  total (s)   self (s)
+    1              0.000007   let pos = getcurpos()
+    1              0.000014   let content = pos[2] == 1 ? '' : getline('.')[0: pos[2] - 2]
+    1              0.000008   return [pos[1] - 1, strchars(content)]
+
+FUNCTION  coc#rpc#request()
+    Defined: ~/.vim/plugged/coc.nvim/autoload/coc/rpc.vim line 92
+Called 1 time
+Total time:  19.799707
+ Self time:   0.000025
+
+count  total (s)   self (s)
+    1   0.000017   0.000008   if !coc#rpc#ready()
+                                return ''
+    1              0.000001   endif
+    1  19.799687   0.000014   return s:client['request'](a:method, a:args)
+
+FUNCTION  coc#_hide()
+    Defined: ~/.vim/plugged/coc.nvim/autoload/coc.vim line 94
+Called 1 time
+Total time:   0.000006
+ Self time:   0.000006
+
+count  total (s)   self (s)
+    1              0.000005   if !pumvisible() | return | endif
+                              call feedkeys("\<C-e>", 'in')
+
+FUNCTION  301()
+    Defined: ~/.vim/plugged/coc.nvim/autoload/coc/api.vim line 179
+Called 1 time
+Total time:   0.000016
+ Self time:   0.000016
+
+count  total (s)   self (s)
+    1              0.000014   return {'blocking': v:false, 'mode': mode()}
+
+FUNCTION  coc#api#call()
+    Defined: ~/.vim/plugged/coc.nvim/autoload/coc/api.vim line 577
+Called 10 times
+Total time:   0.000591
+ Self time:   0.000342
+
+count  total (s)   self (s)
+   10              0.000062   let err = v:null
+   10              0.000023   let res = v:null
+   10              0.000015   try
+   10   0.000391   0.000142     let res = call(s:funcs[a:method], a:args)
+                              catch /.*/
+                                let err = v:exception
+   10              0.000015   endtry
+   10              0.000026   return [err, res]
+
+FUNCTION  282()
+    Defined: ~/.vim/plugged/coc.nvim/autoload/coc/api.vim line 97
+Called 8 times
+Total time:   0.000182
+ Self time:   0.000091
+
+count  total (s)   self (s)
+    8   0.000177   0.000086   return call(a:method, a:args)
+
+FUNCTION  coc#rpc#ready()
+    Defined: ~/.vim/plugged/coc.nvim/autoload/coc/rpc.vim line 31
+Called 2 times
+Total time:   0.000019
+ Self time:   0.000019
+
+count  total (s)   self (s)
+    2              0.000011   if empty(s:client) || s:client['running'] == 0
+                                return 0
+    2              0.000002   endif
+    2              0.000002   return 1
+
+FUNCTION  <SNR>20_Autocmd()
+    Defined: ~/.vim/plugged/coc.nvim/plugin/coc.vim line 163
+Called 1 time
+Total time:   0.000142
+ Self time:   0.000023
+
+count  total (s)   self (s)
+    1              0.000010   if !get(g:,'coc_workspace_initialized', 0) | return | endif
+    1   0.000130   0.000011   call coc#rpc#notify('CocAutocmd', a:000)
+
+FUNCTION  <SNR>23_notify()
+    Defined: ~/.vim/plugged/coc.nvim/autoload/coc/client.vim line 137
+Called 1 time
+Total time:   0.000083
+ Self time:   0.000077
+
+count  total (s)   self (s)
+    1   0.000018   0.000012   let channel = coc#client#get_channel(self)
+    1              0.000005   if empty(channel) | return '' | endif
+    1              0.000002   try
+    1              0.000001     if s:is_vim
+    1              0.000021       call ch_sendraw(channel, json_encode([0, [a:method, a:args]])."\n")
+                                else
+                                  call call('rpcnotify', [channel, a:method] + a:args)
+    1              0.000001     endif
+                              catch /.*/
+                                if v:exception =~# 'E475'
+                                  if get(g:, 'coc_vim_leaving', 0) | return | endif
+                                  echohl Error | echom '['.self.name.'] server connection lost' | echohl None
+                                  let name = self.name
+                                  call s:on_exit(name, 0)
+                                  execute 'silent do User ConnectionLost'.toupper(name[0]).name[1:]
+                                elseif v:exception =~# 'E12'
+                                  " neovim's bug, ignore it
+                                else
+                                  echohl Error | echo 'Error on notify ('.a:method.'): '.v:exception | echohl None
+                                endif
+    1              0.000001   endtry
+
+FUNCTION  coc#api#notify()
+    Defined: ~/.vim/plugged/coc.nvim/autoload/coc/api.vim line 588
+Called 1 time
+Total time:   0.000245
+ Self time:   0.000028
+
+count  total (s)   self (s)
+    1   0.000243   0.000026   call call(s:funcs[a:method], a:args)
+
+FUNCTION  <SNR>20_SyncAutocmd()
+    Defined: ~/.vim/plugged/coc.nvim/plugin/coc.vim line 168
+Called 1 time
+Total time:  19.799739
+ Self time:   0.000032
+
+count  total (s)   self (s)
+    1              0.000009   if !get(g:,'coc_workspace_initialized', 0) | return | endif
+    1              0.000003   if get(g:, 'coc_service_initialized', 0)
+    1  19.799718   0.000011     call coc#rpc#request('CocAutocmd', a:000)
+                              else
+                                call coc#rpc#notify('CocAutocmd', a:000)
+    1              0.000001   endif
+
+FUNCTION  coc#util#unplace_signs()
+    Defined: ~/.vim/plugged/coc.nvim/autoload/coc/util.vim line 499
+Called 3 times
+Total time:   0.000043
+ Self time:   0.000043
+
+count  total (s)   self (s)
+    3              0.000021   if !bufloaded(a:bufnr) | return | endif
+    3              0.000008   for id in a:sign_ids
+                                execute 'silent! sign unplace '.id.' buffer='.a:bufnr
+    3              0.000006   endfor
+
+FUNCTION  coc#util#get_content()
+    Defined: ~/.vim/plugged/coc.nvim/autoload/coc/util.vim line 630
+Called 1 time
+Total time:   0.000042
+ Self time:   0.000042
+
+count  total (s)   self (s)
+    1              0.000006   if !bufexists(a:bufnr) | return '' | endif
+    1              0.000035   return { 'content': join(getbufline(a:bufnr, 1, '$'), "\n"), 'changedtick': getbufvar(a:bufnr, 'changedtick') }
+
+FUNCTION  278()
+    Defined: ~/.vim/plugged/coc.nvim/autoload/coc/api.vim line 75
+Called 1 time
+Total time:   0.000217
+ Self time:   0.000113
+
+count  total (s)   self (s)
+    1              0.000006   let res = []
+    4              0.000011   for [key, arglist] in a:calls
+    3              0.000012     let name = key[5:]
+    3              0.000003     try
+    3   0.000145   0.000041       call add(res, call(s:funcs[name], arglist))
+                                catch /.*/
+                                  return [res, v:exception]
+    3              0.000004     endtry
+    4              0.000005   endfor
+    1              0.000002   return [res, v:null]
+
+FUNCTION  <SNR>23_request()
+    Defined: ~/.vim/plugged/coc.nvim/autoload/coc/client.vim line 105
+Called 1 time
+Total time:  19.799673
+ Self time:  19.799230
+
+count  total (s)   self (s)
+    1   0.000015   0.000010   let channel = coc#client#get_channel(self)
+    1              0.000004   if empty(channel) | return '' | endif
+    1              0.000001   try
+    1              0.000001     if s:is_vim
+    1  19.799549  19.799111       let res = ch_evalexpr(channel, [a:method, a:args], {'timeout': 30000})
+    1              0.000005       if type(res) == 1 && res ==# ''
+                                    throw 'timeout after 30s'
+    1              0.000001       endif
+    1              0.000003       let [l:errmsg, res] =  res
+    1              0.000003       if !empty(l:errmsg)
+                                    throw l:errmsg
+    1              0.000001       else
+    1              0.000002         return res
+                                  endif
+                                endif
+                                return call('rpcrequest', [channel, a:method] + a:args)
+                              catch /.*/
+                                if v:exception =~# 'E475'
+                                  if get(g:, 'coc_vim_leaving', 0) | return | endif
+                                  echohl Error | echom '['.self.name.'] server connection lost' | echohl None
+                                  let name = self.name
+                                  call s:on_exit(name, 0)
+                                  execute 'silent do User ConnectionLost'.toupper(name[0]).name[1:]
+                                elseif v:exception =~# 'E12'
+                                  " neovim's bug, ignore it
+                                else
+                                  echohl Error | echo 'Error on request ('.a:method.'): '.v:exception | echohl None
+                                endif
+    1              0.000002   endtry
+
+FUNCTION  284()
+    Defined: ~/.vim/plugged/coc.nvim/autoload/coc/api.vim line 105
+Called 2 times
+Total time:   0.000088
+ Self time:   0.000088
+
+count  total (s)   self (s)
+                              " command that could cause cursor vanish
+    2              0.000033   if a:command =~# '^echo' || a:command =~# '^redraw' || a:command =~# '^sign place'
+                                call timer_start(0, {-> s:execute(a:command)})
+    2              0.000002   else
+    2              0.000035     execute a:command
+    2              0.000002   endif
+
+FUNCTION  285()
+    Defined: ~/.vim/plugged/coc.nvim/autoload/coc/api.vim line 114
+Called 2 times
+Total time:   0.000067
+ Self time:   0.000038
+
+count  total (s)   self (s)
+    2   0.000065   0.000036   return eval(a:expr)
+
+FUNCTION  coc#rpc#notify()
+    Defined: ~/.vim/plugged/coc.nvim/autoload/coc/rpc.vim line 99
+Called 1 time
+Total time:   0.000119
+ Self time:   0.000026
+
+count  total (s)   self (s)
+    1   0.000019   0.000009   if !coc#rpc#ready()
+                                return ''
+    1              0.000001   endif
+    1   0.000095   0.000012   call s:client['notify'](a:method, a:args)
+    1              0.000002   return ''
+
+FUNCTIONS SORTED ON TOTAL TIME
+count  total (s)   self (s)  function
+:    1  19.799707   0.000025  coc#rpc#request()
+    1  19.799673  19.799230  <SNR>23_request()
+   10   0.000591   0.000342  coc#api#call()
+    1   0.000245   0.000028  coc#api#notify()
+    1   0.000217   0.000113  278()
+    8   0.000182   0.000091  282()
+    1   0.000142   0.000023  <SNR>20_Autocmd()
+    1   0.000119   0.000026  coc#rpc#notify()
+    2   0.000088             284()
+    1   0.000083   0.000077  <SNR>23_notify()
+    2   0.000067   0.000038  285()
+    3   0.000043             coc#util#unplace_signs()
+    1   0.000042             coc#util#get_content()
+    1   0.000029             coc#util#cursor()
+    2   0.000019             coc#rpc#ready()
+    1   0.000016             301()
+    2   0.000011             coc#client#get_channel()
+    1   0.000006             coc#_hide()
+
+FUNCTIONS SORTED ON SELF TIME
+count  total (s)   self (s)  function
+    1  19.799673  19.799230  <SNR>23_request()
+   10   0.000591   0.000342  coc#api#call()
+    1   0.000217   0.000113  278()
+    8   0.000182   0.000091  282()
+    2              0.000088  284()
+    1   0.000083   0.000077  <SNR>23_notify()
+    3              0.000043  coc#util#unplace_signs()
+    1              0.000042  coc#util#get_content()
+    2   0.000067   0.000038  285()
+    1  19.799739   0.000032  <SNR>20_SyncAutocmd()
+    1              0.000029  coc#util#cursor()
+    1   0.000245   0.000028  coc#api#notify()
+    1   0.000119   0.000026  coc#rpc#notify()
+    1  19.799707   0.000025  coc#rpc#request()
+    1   0.000142   0.000023  <SNR>20_Autocmd()
+    2              0.000019  coc#rpc#ready()
+    1              0.000016  301()
+    2              0.000011  coc#client#get_channel()
+    1              0.000006  coc#_hide()
+

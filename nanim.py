@@ -4,6 +4,7 @@ import utility
 from utility import *
 import os
 import subprocess;
+import sys;
 
 WIDTH, HEIGHT = 1000, 1000
 TEMP_FRAMES_LOCATION_NAME = "TEMP-Anim-Frames/"
@@ -13,8 +14,10 @@ TEMP_FRAMES_LOCATION_NAME = "TEMP-Anim-Frames/"
 
 class Scene:
     FRAME_RATE = 10;
-    def __init__(self, file_name="animation.mp4"):
+    def __init__(self, file_name="animation.mp4", frame_rate=30, quality=20):
+        Scene.FRAME_RATE = frame_rate;
         self.objectsToDraw = []
+        self.quality = quality 
         self.surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, WIDTH, HEIGHT)
         self.ctx = cairo.Context(self.surface)
         #self.ctx.rotate(3*math.pi/2);
@@ -35,17 +38,28 @@ class Scene:
         except:
             pass;
 
-        print("Rendering Frames");
+        print("Rendering Frames\n*** ", end="");
+        lastprog=0;
         for i, frame in enumerate(self.frames):
+            if(lastprog  != self.get_progress(i)):
+                lastprog = self.get_progress(i)
+                print("-", end="")
+                sys.stdout.flush()
+
             for action in frame:
                 action[0]( *action[1]) # this is calling that first action, with the arguamets giving in the other one
+
             self.drawFrame()
             self.writeFrame(i)
 
+        print(" ***\nDone!\nRendering Video");
         self.make_video_from_frames();
 
+    def get_progress(self, index):
+        return abs(round(index*100/len(self.frames)))
+
     def make_video_from_frames(self):
-        ffmpegCmd = (f"ffmpeg -r {Scene.FRAME_RATE} -f image2 -s 1920x1080 -i ./{TEMP_FRAMES_LOCATION_NAME}%d.png -vcodec libx264 -crf 25 -pix_fmt yuv420p test.mp4 -y").split();
+        ffmpegCmd = (f"ffmpeg -r {Scene.FRAME_RATE} -f image2 -s 1920x1080 -i ./{TEMP_FRAMES_LOCATION_NAME}%d.png -vcodec libx264 -crf {self.quality} -pix_fmt yuv420p test.mp4 -y").split();
         subprocess.call(ffmpegCmd);
         subprocess.call(("rm -rf ./" + TEMP_FRAMES_LOCATION_NAME).split()); 
         subprocess.call("open test.mp4".split());
