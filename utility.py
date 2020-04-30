@@ -58,8 +58,9 @@ class BasicObject:
         if starting_time == "not_set":
             starting_time = self.lastAnimationTime;
         starting_frame, last_frame = self.get_anim_frames(duration, starting_time);
+
+        subAngle = angle/(last_frame-starting_frame+1);
         for i in range(starting_frame, last_frame+1):
-            subAngle = self.get_prog(i,starting_frame,last_frame) * angle;
             self.insert_animation_into_frame( self.rotate_object_by_angle, [subAngle, around], i);
 
         self.insert_animation_into_frame( self.recalculate_position_from_points, [], last_frame);
