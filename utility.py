@@ -7,7 +7,7 @@ class BasicObject:
         self.old_animation_positions = {}
         self.lastAnimationTime = 0;
         self.recalculate_position_from_points()
-        self.runningPosition = {}
+        self.running_positions = {"color": color}
         
 
     def insert_animation_into_frame(self, function, parameters, i):
@@ -16,8 +16,10 @@ class BasicObject:
         self.scene.frames[i].append([function, parameters]); 
 
     def get_position(self):
-        return Point(self.runningPosition["x"], self.runningPosition["y"]);
-
+        return Point(self.running_positions["x"], self.running_positions["y"]);
+    """
+        Give a starting time and duration retuns the frames required
+    """
     def get_anim_frames(self, time, starting_time):
         startingFrame = starting_time * self.scene.FRAME_RATE
         totalFrames = startingFrame + time * self.scene.FRAME_RATE;
@@ -28,26 +30,42 @@ class BasicObject:
             pass
             #return 1
         return float((index-int(startingFrame))/(int(lastFrame)-int(startingFrame)))
+    """
+    Called by the animation frame runner
+    """
+    def anim_set_color(self, color): 
+        starting_color = color;
+        self.color = color
 
     def fadeOut(self, duration=0.5, starting_time="not_set", blocking=True):
         if starting_time == "not_set":
             starting_time = self.lastAnimationTime;
         startingFrame, lastFrame = self.get_anim_frames(duration, starting_time);
+        starting_color = self.running_positions["color"]
+
         for i in range(startingFrame, lastFrame+1):
             alpha = 1-self.get_prog(i, startingFrame, lastFrame)
-            self.insert_animation_into_frame(self.set_color, [Color(self.color.r, self.color.g, self.color.b,alpha)], i ); 
+            starting_color.a = alpha;
+            self.insert_animation_into_frame(self.anim_set_color, [Color(starting_color.r, starting_color.g, starting_color.b, starting_color.a)], i ); 
 
+        self.running_positions["color"] = starting_color;
         if blocking:
             self.lastAnimationTime = starting_time + duration;
         return self
+
     def fadeIn(self, duration=0.5, starting_time="not_set", blocking=True):
         if starting_time == "not_set":
             starting_time = self.lastAnimationTime;
         startingFrame, lastFrame = self.get_anim_frames(duration, starting_time);
+        starting_color = self.running_positions["color"]
+        print(f" {starting_color.r} {starting_color.g} {starting_color.b} {starting_color.a}")
+
         for i in range(startingFrame, lastFrame+1):
             alpha = self.get_prog(i, startingFrame, lastFrame)
-            self.insert_animation_into_frame(self.set_color, [Color(self.color.r, self.color.g, self.color.b,alpha)], i ); 
+            starting_color.a = alpha
+            self.insert_animation_into_frame(self.anim_set_color, [Color(starting_color.r, starting_color.g, starting_color.b, starting_color.a)], i ); 
 
+        self.running_positions["color"] = starting_color;
         if blocking:
             self.lastAnimationTime = starting_time + duration;
         return self
@@ -76,9 +94,6 @@ class BasicObject:
         self.lastAnimationTime = self.lastAnimationTime + duration;
         return self
 
-    def set_color(self,color):
-        self.color = color;
-    
     def recalculate_position_from_points(self):
         newx = 0
         newy = 0
@@ -112,12 +127,28 @@ def lin_interpolate(x1, y1, x2, y2, x3):
 class Shape(BasicObject):
     
     def translate(self, x=0, y=0, duration=0.5, starting_time="not_set"):
-        self.move_to(Point(self.runningPosition["x"] + x, self.runningPosition["y"] + y), duration=duration, starting_time=starting_time);
+        self.move_to(Point(self.running_positions["x"] + x, self.running_positions["y"] + y), duration=duration, starting_time=starting_time);
+        return self
+
+    def set_color(self, color, duration=0.5, starting_time="not_set", blocking=True):
+        if starting_time == "not_set":
+            starting_time = self.lastAnimationTime
+        
+        startingFrame, lastFrame = self.get_anim_frames(duration, starting_time);
+        starting_color = self.running_positions["color"];
+        for i in range(startingFrame, lastFrame+1):
+            self.insert_animation_into_frame(self.lerp_to_color, [color, startingFrame, lastFrame, i, starting_color], i ); 
+
+        self.running_positions["color"] = color;
+
+        if blocking:
+            self.lastAnimationTime = starting_time + duration
+
         return self
 
     def move_to(self, point, duration=0.5, starting_time="not_set"):
-        self.runningPosition["x"] = point.x;
-        self.runningPosition["y"] = point.y;
+        self.running_positions["x"] = point.x;
+        self.running_positions["y"] = point.y;
 
         print(f"moving to point {point.x} {point.y}")
         if starting_time == "not_set":
@@ -130,6 +161,14 @@ class Shape(BasicObject):
         self.lastAnimationTime = starting_time+duration;
         return self
     
+    def lerp_to_color(self, color, first_frame, last_frame, current_frame_index, starting_color):
+        
+            lerped_r = lin_interpolate(first_frame, starting_color.r, last_frame, color.r, current_frame_index) ## we dont want current position, we want intial posisiton 
+            lerped_g = lin_interpolate(first_frame, starting_color.g, last_frame, color.g, current_frame_index) ## we dont want current position, we want intial posisiton 
+            lerped_b = lin_interpolate(first_frame, starting_color.b, last_frame, color.b, current_frame_index) ## we dont want current position, we want intial posisiton 
+
+            self.color = Color.RGB(lerped_r, lerped_g, lerped_b);
+
     def lerp_to(self, final_point, first_frame, last_frame, current_frame_index, animation_id):
             starting_x = 0;
             starting_y = 0;
@@ -177,8 +216,8 @@ class Rectangle(Shape):
         self.height = height;
         super().__init__( self.calcPoints(), color);
 
-        self.runningPosition["x"] = x;
-        self.runningPosition["y"] = y;
+        self.running_positions["x"] = x;
+        self.running_positions["y"] = y;
 
     def calcPoints(self):
         width = self.width
