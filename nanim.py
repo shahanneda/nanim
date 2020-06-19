@@ -14,7 +14,7 @@ TEMP_FRAMES_LOCATION_NAME = "TEMP-Anim-Frames/"
 class Scene:
     FRAME_RATE = 30;
     QUALITY = 20;
-    def __init__(self, file_name="animation.mp4"):
+    def __init__(self):
         self.objectsToDraw = []
         self.surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, WIDTH, HEIGHT)
         self.ctx = cairo.Context(self.surface)
@@ -56,10 +56,10 @@ class Scene:
         return abs(round(index*100/len(self.frames)))
 
     def make_video_from_frames(self):
-        ffmpegCmd = (f"ffmpeg -r {Scene.FRAME_RATE} -f image2 -s 1920x1080 -i ./{TEMP_FRAMES_LOCATION_NAME}%d.png -vcodec libx264 -crf {Scene.QUALITY} -pix_fmt yuv420p test.mp4 -y").split();
+        ffmpegCmd = (f"ffmpeg -r {Scene.FRAME_RATE} -f image2 -s 1920x1080 -i { os.path.join(os.path.dirname(__file__), TEMP_FRAMES_LOCATION_NAME)}%d.png -vcodec libx264 -crf {Scene.QUALITY} -pix_fmt yuv420p {Scene.OUTPUT_FILENAME}.mp4 -y").split();
         subprocess.call(ffmpegCmd);
         subprocess.call(("rm -rf ./" + TEMP_FRAMES_LOCATION_NAME).split()); 
-        subprocess.call("open ./test.mp4".split());
+        subprocess.call(f"open {Scene.OUTPUT_FILENAME + '.mp4'}".split());
 
     def drawFrame(self):
         self.ctx.rectangle(0, 0, WIDTH, HEIGHT)
@@ -90,6 +90,7 @@ def main():
     parser = argparse.ArgumentParser(description='Render a NAnim animation.')
     parser.add_argument("input_filename", help="the file name of the input file");
 
+    parser.add_argument("-o", "--output_filename", help="the name of the output file, by default it is output.mp4", default = "output.mp4")
     parser.add_argument("-f", "--framerate", help="the framerate the animation should be rendered at (in frames per second), the default is 30fps", type=int, default=30)
     parser.add_argument("-q", "--quality", help="the quality of the rendered video file, from 1-100, the default is 50, which is very good quality", type=int, default = 50)
 
@@ -101,6 +102,11 @@ def main():
         real_quality = 51
     if real_quality < 0:
         real_quality = 0
+
+    Scene.OUTPUT_FILENAME= args.output_filename
+    if ".mp4" in args.output_filename: # remove extension if user provided it 
+        Scene.OUTPUT_FILENAME = "".join(args.output_filename.split(".")[:-1]);
+
 
 
     # open file user specifed
