@@ -1,9 +1,5 @@
-from nanim import *; 
 
 s = Scene(frame_rate=10, quality=20);
-
-
-
 
 rect = s.add(Rectangle(500,500,100,100, Color.RGB(256,100,90)));
 rect.rotate(360*10, duration=10, around=Point(500,500)).fadeOut();

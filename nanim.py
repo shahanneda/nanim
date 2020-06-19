@@ -1,11 +1,12 @@
 import math
+import argparse;
 import cairo
 import utility
-from utility import *
 import os
 import subprocess;
 import sys;
 
+from utility import *
 WIDTH, HEIGHT = 1000, 1000
 TEMP_FRAMES_LOCATION_NAME = "TEMP-Anim-Frames/"
 
@@ -84,6 +85,32 @@ class Scene:
         self.surface.write_to_png(filename)
 
 
+
+def main():
+    # if(len(sys.argv) == 1):
+    #     print("ERROR: Enter input filename as first argument!");
+    #     return;
+    # exec(open(sys.argv[1]).read());
+    parser = argparse.ArgumentParser(description='Render a NAnim animation.')
+    parser.add_argument("input_filename", help="the file name of the input file");
+
+    parser.add_argument("-f", "--framerate", help="the framerate the animation should be rendered at (in frames per second), the default is 30fps", type=int, default=30)
+    parser.add_argument("-q", "--quality", help="the quality of the rendered video file, from 1-100, the default is 50, which is very good quality", type=int, default = 50)
+
+    args = parser.parse_args();
+    
+    #we need to change to 1-100 to 0-51 for ffmpeg where 0 is gihest quality and 51 is lowest
+    real_quality = int( (1-(args.quality/100)) * 51 )
+    if real_quality > 51:
+        real_quality = 51
+    if real_quality < 0:
+        real_quality = 0
+
+
+    print(real_quality);
+
+if __name__ == "__main__":
+    main();
 """
 rect2 = s.add(Rectangle(x=200, y=200,  width=100, height=100, color=Color.RGB(0.6,0.6,0.6)));
 rect2.fadeIn().move_to(Point(200,900), duration=2).fadeIn().fadeOut();
