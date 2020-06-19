@@ -58,7 +58,6 @@ class BasicObject:
             starting_time = self.lastAnimationTime;
         startingFrame, lastFrame = self.get_anim_frames(duration, starting_time);
         starting_color = self.running_positions["color"]
-        print(f" {starting_color.r} {starting_color.g} {starting_color.b} {starting_color.a}")
 
         for i in range(startingFrame, lastFrame+1):
             alpha = self.get_prog(i, startingFrame, lastFrame)
@@ -73,7 +72,6 @@ class BasicObject:
     def rotate(self, angle, duration=0.5, starting_time="not_set", blocking=True, around="not_set", pi_mode=False):
         if not pi_mode:
             angle = (angle /180)*math.pi;
-        print(angle);
         self.recalculate_position_from_points()
         #print(f"around: {around.x} {around.y}, self: {self.x} {self.y}");
 
@@ -150,7 +148,6 @@ class Shape(BasicObject):
         self.running_positions["x"] = point.x;
         self.running_positions["y"] = point.y;
 
-        print(f"moving to point {point.x} {point.y}")
         if starting_time == "not_set":
             starting_time = self.lastAnimationTime
         startingFrame, lastFrame = self.get_anim_frames(duration, starting_time);

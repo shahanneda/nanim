@@ -1,6 +1,0 @@
-\documentclass[convert={density=300,size=1080x800,outext=.png}]{standalone}
-\begin{document}
-$
-\frac{5}{6x^2}
-$
-\end{document}
