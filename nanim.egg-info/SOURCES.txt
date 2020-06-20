@@ -1,0 +1,11 @@
+README.md
+setup.py
+nanim/__init__.py
+nanim/command_line.py
+nanim/nanim.py
+nanim/utility.py
+nanim.egg-info/PKG-INFO
+nanim.egg-info/SOURCES.txt
+nanim.egg-info/dependency_links.txt
+nanim.egg-info/entry_points.txt
+nanim.egg-info/top_level.txt

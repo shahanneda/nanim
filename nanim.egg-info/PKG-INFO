@@ -1,0 +1,17 @@
+Metadata-Version: 2.1
+Name: nanim
+Version: 0.0.1
+Summary: A python animation library
+Home-page: https://github.com/shahanneda/nanim
+Author: Shahan Neda
+Author-email: shahan.neda@gmail.com
+License: UNKNOWN
+Description: #NAnim
+        ## An animation library designed from the ground up for a intuitive and easy to use interface. Made in python.
+        
+Platform: UNKNOWN
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown

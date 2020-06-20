@@ -1,0 +1,15 @@
+/anaconda3/lib/python3.7/site-packages/nanim-0.0.1-py3.7.egg/nanim/nanim.py
+/anaconda3/lib/python3.7/site-packages/nanim-0.0.1-py3.7.egg/nanim/command_line.py
+/anaconda3/lib/python3.7/site-packages/nanim-0.0.1-py3.7.egg/nanim/utility.py
+/anaconda3/lib/python3.7/site-packages/nanim-0.0.1-py3.7.egg/nanim/__init__.py
+/anaconda3/lib/python3.7/site-packages/nanim-0.0.1-py3.7.egg/nanim/__pycache__/command_line.cpython-37.pyc
+/anaconda3/lib/python3.7/site-packages/nanim-0.0.1-py3.7.egg/nanim/__pycache__/nanim.cpython-37.pyc
+/anaconda3/lib/python3.7/site-packages/nanim-0.0.1-py3.7.egg/nanim/__pycache__/utility.cpython-37.pyc
+/anaconda3/lib/python3.7/site-packages/nanim-0.0.1-py3.7.egg/nanim/__pycache__/__init__.cpython-37.pyc
+/anaconda3/lib/python3.7/site-packages/nanim-0.0.1-py3.7.egg/EGG-INFO/PKG-INFO
+/anaconda3/lib/python3.7/site-packages/nanim-0.0.1-py3.7.egg/EGG-INFO/not-zip-safe
+/anaconda3/lib/python3.7/site-packages/nanim-0.0.1-py3.7.egg/EGG-INFO/SOURCES.txt
+/anaconda3/lib/python3.7/site-packages/nanim-0.0.1-py3.7.egg/EGG-INFO/entry_points.txt
+/anaconda3/lib/python3.7/site-packages/nanim-0.0.1-py3.7.egg/EGG-INFO/top_level.txt
+/anaconda3/lib/python3.7/site-packages/nanim-0.0.1-py3.7.egg/EGG-INFO/dependency_links.txt
+/anaconda3/bin/nanimreal
