@@ -5,6 +5,7 @@ import cairo
 import os
 import subprocess;
 import sys;
+from .utility import *;
 
 WIDTH, HEIGHT = 1000, 1000
 TEMP_FRAMES_LOCATION_NAME = "TEMP-Anim-Frames/"

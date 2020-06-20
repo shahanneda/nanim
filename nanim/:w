@@ -14,7 +14,7 @@ setuptools.setup(
         url="https://github.com/shahanneda/nanim",
         packages=setuptools.find_packages(),
         python_requires='>=3.6',
-        install_requires=["ffmpeg", "pycairo"],
+        install_requires["ffmpeg", "pycairo"],
         entry_points = {
             'console_scripts': [
                 'nanim = nanim.nanim:main'
