@@ -10,6 +10,7 @@ Use the package manager [pip](https://pip.pypa.io/en/stable/) to install nanim.
 ```bash
 pip install nanim
 ```
+The dependenices are pycairo and ffmpeg, which pip should install automatically.
 
 ## Usage
 Firstly make an animation file, in which build your animation,
@@ -24,7 +25,7 @@ s.run_animation();
 ```
 
 ### To render your animation:
-- run with `nanim <file-name>` where file name is the file name of your animation file
+- run with `nanim <file-name>` for example `nanim animation.py` where file name is the file name of your animation file
 - running `nanim -h` will give you a list of options
 
 ### List of all functions callable on objects
