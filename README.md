@@ -30,13 +30,12 @@ s.run_animation();
 
 ### List of all functions callable on objects
 ```python3
-
-    def fade_out(duration=0.5, blocking=True):
    """Fade Out
     Parameters:
     duration (float): duration of animation in seconds
     blocking (bool): whether this animation should stop other animations until its done
    """
+    def fade_out(duration=0.5, blocking=True):
     
    """Fade In
     Parameters:
