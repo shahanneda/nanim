@@ -37,7 +37,12 @@ class BasicObject:
         starting_color = color;
         self.color = color
 
-    def fadeOut(self, duration=0.5, starting_time="not_set", blocking=True):
+    def fade_out(self, duration=0.5, starting_time="not_set", blocking=True):
+        """Fade Out
+            Parameters:
+            duration (float): duration of animation in seconds
+            blocking (bool): whether this animation should stop other animations until its done
+       """
         if starting_time == "not_set":
             starting_time = self.lastAnimationTime;
         startingFrame, lastFrame = self.get_anim_frames(duration, starting_time);
@@ -53,7 +58,7 @@ class BasicObject:
             self.lastAnimationTime = starting_time + duration;
         return self
 
-    def fadeIn(self, duration=0.5, starting_time="not_set", blocking=True):
+    def fade_in(self, duration=0.5, starting_time="not_set", blocking=True):
         if starting_time == "not_set":
             starting_time = self.lastAnimationTime;
         startingFrame, lastFrame = self.get_anim_frames(duration, starting_time);
@@ -70,6 +75,14 @@ class BasicObject:
         return self
 
     def rotate(self, angle, duration=0.5, starting_time="not_set", blocking=True, around="not_set", pi_mode=False):
+           """Rotate
+            Parameters:
+            angle (float): the angle to rotate, either in degrees or radians set by pi mode.
+            duration (float): duration of animation in seconds
+            blocking (bool): whether this animation should stop other animations until its done
+            around (Point): a point to rotate around, default is the center of the object
+            pi_mode (bool): whetor the angle is in degrees or radians
+           """
         if not pi_mode:
             angle = (angle /180)*math.pi;
         self.recalculate_position_from_points()
@@ -89,6 +102,10 @@ class BasicObject:
         return self;
 
     def wait(self, duration=0.5):
+       """Makes object wait
+        Parameters:
+        duration (float): duration of animation in seconds
+       """
         self.lastAnimationTime = self.lastAnimationTime + duration;
         return self
     """ Averages out new x y coordinates from the points, used inorder to fix irregualar shapes and wonky rotations """
@@ -125,10 +142,22 @@ def lin_interpolate(x1, y1, x2, y2, x3):
 class Shape(BasicObject):
 
     def translate(self, x=0, y=0, duration=0.5, starting_time="not_set"):
+       """Translate
+        Parameters:
+        duration (float): duration of animation in seconds
+        x (int): how much to translate in the x direction
+        y (int):  how much to translate in the y direction
+       """
         self.move_to(Point(self.running_positions["x"] + x, self.running_positions["y"] + y), duration=duration, starting_time=starting_time);
         return self
 
     def set_color(self, color, duration=0.5, starting_time="not_set", blocking=True):
+       """Set color
+        Parameters:
+        color (color): the color to turn too
+        duration (float): duration of animation in seconds
+        blocking (bool): whether this animation should stop other animations until its done
+       """
         if starting_time == "not_set":
             starting_time = self.lastAnimationTime
 
@@ -145,6 +174,11 @@ class Shape(BasicObject):
         return self
 
     def move_to(self, point, duration=0.5, starting_time="not_set"):
+       """Move to 
+        Parameters:
+        point (Point): the location to move to (should be a point such as Point(x=0,y=0)
+        duration (float): duration of animation in seconds
+       """
         self.running_positions["x"] = point.x;
         self.running_positions["y"] = point.y;
 
