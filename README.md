@@ -30,6 +30,48 @@ s.run_animation();
 
 ### List of all functions callable on objects
 ```python
+    """Fade Out
+    Parameters:
+    duration (float): duration of animationn in seconds
+    blocking (bool): whether this animation should stop other animations until its done
+   """
+    def fade_out(duration=0.5, blocking=True);
+    
+   """Fade In
+    Parameters:
+    duration (float): duration of animationn in seconds
+    blocking (bool): whether this animation should stop other animations until its done
+   """
+    def fade_in(duration=0.5, starting_time="not_set", blocking=True):
+   
+   
+   """Rotate
+    Parameters:
+    angle (float): the angle to rotate, either in degrees or radians set by pi mode.
+    duration (float): duration of animationn in seconds
+    blocking (bool): whether this animation should stop other animations until its done
+    around (Point): a point to rotate around, default is the center of the object
+    pi_mode (bool): whetor the angle is in degrees or radians
+   """
+    def rotate(angle, duration=0.5, blocking=True, around="not_set", pi_mode=False):
+    
+   """Waits
+    Parameters:
+    duration (float): duration of animationn in seconds
+   """
+    def wait(duration=0.5):
+    
+   """FTranslate
+    Parameters:
+    duration (float): duration of animationn in seconds
+    x (int): how much to translate in the x direction
+    y (int):  how much to translate in the y direction
+   """
+    def translate(self, x=0, y=0, duration=0.5"):
+    def set_color(self, color, duration=0.5, starting_time="not_set", blocking=True):
+    def move_to(self, point, duration=0.5, starting_time="not_set"):
+
+
 
 
 ```
