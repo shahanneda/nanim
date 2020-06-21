@@ -30,12 +30,13 @@ s.run_animation();
 
 ### List of all functions callable on objects
 ```python
+
    """Fade Out
     Parameters:
     duration (float): duration of animation in seconds
     blocking (bool): whether this animation should stop other animations until its done
    """
-    def fade_out(duration=0.5, blocking=True);
+    def fade_out(duration=0.5, blocking=True):
     
    """Fade In
     Parameters:
@@ -55,8 +56,8 @@ s.run_animation();
    """
     def rotate(angle, duration=0.5, blocking=True, around="not_set", pi_mode=False):
     
-   """Waits
-    Parameters:
+   """Makes object wait
+   Parameters:
     duration (float): duration of animation in seconds
    """
     def wait(duration=0.5):
