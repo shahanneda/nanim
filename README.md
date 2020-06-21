@@ -29,7 +29,7 @@ s.run_animation();
 - running `nanim -h` will give you a list of options
 
 ### List of all functions callable on objects
-```python
+```python3
 
    """Fade Out
     Parameters:
