@@ -25,7 +25,7 @@ s.run_animation();
 ```
 
 ### To render your animation:
-- run with `nanim <file-name>` for example `nanim animation.py` where file name is the file name of your animation file
+- run with `nanim <file-name>` where file name is the file name of your animation file (for example `nanim animation.py`)
 - running `nanim -h` will give you a list of options
 
 ### List of all functions callable on objects
